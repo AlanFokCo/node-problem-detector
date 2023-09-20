@@ -76,9 +76,8 @@ RUN test -h /etc/localtime && rm -f /etc/localtime && cp /usr/share/zoneinfo/UTC
 COPY --from=builder /src/github.com/AliyunContainerService/node-problem-detector/bin/node-problem-detector /node-problem-detector
 COPY --from=builder /src/github.com/AliyunContainerService/node-problem-detector/bin/health-checker ${LOGCOUNTER} /home/kubernetes/bin/
 
-RUN wget https://aliacs-k8s-cn-hongkong.oss-cn-hongkong.aliyuncs.com/arena/ack-gpu-check && \
-    mv ack-gpu-check /usr/local/bin/ && \
-    chmod +x ack-gpu-check
+RUN curl --retry 10 --retry-delay 5 -sSL https://aliacs-k8s-cn-hongkong.oss-cn-hongkong.aliyuncs.com/arena/ack-gpu-check -o /usr/local/bin/ack-gpu-check && \
+    chmod +x /usr/local/bin/ack-gpu-check
 
 COPY --from=builder /src/github.com/AliyunContainerService/node-problem-detector/config /config
 RUN chmod +x /config/plugin/*.sh
